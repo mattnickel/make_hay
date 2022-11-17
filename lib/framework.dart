@@ -1,3 +1,4 @@
+import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class Framework extends StatelessWidget{
             SafeArea(
                 child: Scaffold(
                   appBar: AppBar(
-                    title: Container(
+                    title: SizedBox(
                       width: 120,
                       child: Image.asset('assets/images/make_hay_logo.png')
                     ),
@@ -25,33 +26,30 @@ class Framework extends StatelessWidget{
                     backgroundColor: Colors.black,
                   ),
                   drawer: const SideMenu(),
-                  bottomNavigationBar: Material(
-                    color : Colors.black,
-                    child:
-                    BottomNavigationBar(
-                      onTap: (int _index){
-                        model.currentTab = _index;
-                      },
-                      items: const <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.home),
-                          label: 'One',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.shopping_bag ),
-                          label: 'Two',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.favorite),
-                          label: 'Three',
-                        ),
+                  bottomNavigationBar: Container(
+                    height: 70,
+                    margin: const EdgeInsets.only(bottom: 20, left: 20, right:20),
+                    // padding: EdgeInsets.only(bottom:MediaQuery.of(context).viewInsets.bottom),
 
-                      ],
-                      fixedColor: Colors.white,
-                      backgroundColor: Colors.black,
-                      unselectedItemColor: Colors.grey[800],
-                      currentIndex: (model.currentTab),
-                      type: BottomNavigationBarType.fixed ,
+                    child: SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: FloatingNavbar(
+                        onTap: (int index){
+                          model.currentTab = index;
+                        },
+                        backgroundColor: Colors.white,
+                        borderRadius: 100,
+                        selectedItemColor: const Color(0xFFC23B00),
+                        selectedBackgroundColor: null,
+                        unselectedItemColor: Colors.black54,
+                        currentIndex: (model.currentTab),
+                        items: [
+                          FloatingNavbarItem(icon: Icons.calendar_today, title: 'For Today', ),
+                          FloatingNavbarItem(icon: Icons.list_alt_outlined, title: 'Task List'),
+                          FloatingNavbarItem(icon: Icons.group, title: 'Delegate'),
+
+                        ],
+                      ),
                     ),
                   ),
                   body: model.currentScreen,

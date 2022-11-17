@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:make_hay/screens/login_screen.dart';
 import 'framework.dart';
 
 void main() {
@@ -16,9 +17,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.black,
         backgroundColor: Colors.black,
+        scaffoldBackgroundColor:Colors.black,
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
 
       ),
-      home: Framework(),
+      home: const LoginScreen(''),
     );
   }
 }
