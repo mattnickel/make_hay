@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "744864516049",
+    "firebase_url": "https://make-hay-35205-default-rtdb.firebaseio.com",
+    "project_id": "make-hay-35205",
+    "storage_bucket": "make-hay-35205.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744864516049:android:3105612d939d8bb7bd02f0",
+        "android_client_info": {
+          "package_name": "com.example.make_hay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744864516049-6vsg4fjgvhrq99u1pah2b1omked3reva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVdaPHnq5Odt3LBPkvXp1wLdt3QE_0Ry0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744864516049-6vsg4fjgvhrq99u1pah2b1omked3reva.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744864516049-0f7mctukucsfvd2gtdb2sd2tpi2ntebf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.makeHay"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744864516049:android:3b2a9724d31bc083bd02f0",
+        "android_client_info": {
+          "package_name": "com.nickeldev.make_hay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744864516049-6vsg4fjgvhrq99u1pah2b1omked3reva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVdaPHnq5Odt3LBPkvXp1wLdt3QE_0Ry0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744864516049-6vsg4fjgvhrq99u1pah2b1omked3reva.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744864516049-0f7mctukucsfvd2gtdb2sd2tpi2ntebf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.makeHay"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

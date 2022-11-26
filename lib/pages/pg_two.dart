@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:make_hay/screens/task_list.dart';
+
+import '../page_widgets/task_tile.dart';
 
 
 
@@ -63,14 +66,14 @@ class Two extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                    child: Container(
-                      child: TabBarView(
-                        children: [
-                          // TaskList("Active"),
-                          // TaskList("Completed"),
-                          // TaskList("Archived"),
-                        ],
-                      ),
+                    child: TabBarView(
+                      children: [
+                        TaskTile(),
+                        TaskList(),
+                        TaskList(),
+                        // TaskList("Completed"),
+                        // TaskList("Archived"),
+                      ],
                     )
                 )
 
@@ -78,4 +81,6 @@ class Two extends StatelessWidget {
           )
       );
   }
+
+  void doSomething() {}
 }

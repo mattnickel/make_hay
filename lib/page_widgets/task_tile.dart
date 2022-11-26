@@ -9,47 +9,194 @@ import '../models/task_model.dart';
 class TaskTile extends StatelessWidget {
 
 
-Task task;
+ // Task task;
 
-  TaskTile({ required this.task});
+  // TaskTile({ required this.task});
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.all(10.0),
-          height: 550,
-          width: MediaQuery.of(context).size.width - 40,
-          child: Stack(
-            children: <Widget>[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18.0),
-                child:
-                Column(
-                  children: <Widget>[
-                      Row(
-                      children: [
-                        Positioned(
-                          top: 20,
-                          right:20,
-                          child: Text(task.title)
+    return Stack(
+
+
+        children:[
+          Container(
+            margin: const EdgeInsets.all(20.0),
+
+            height:220,
+            width: MediaQuery.of(context).size.width - 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+          ),
+          Wrap(
+            children: [
+              Container(
+                decoration:const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.black38,
+
+                    ),
+                  ),
+                ),
+                height:70,
+                child: Row(
+                  children:[
+                    SizedBox(
+                      width: 150,
+                      child: Padding(
+                        padding: EdgeInsets.only(left:40.0, top: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Due:",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12),
+                            ),
+                            Text(
+                              "12/25/22",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                            top: 20,
-                            right:20,
-                            child: Text(task.description)
+                      ),
+                    ),
+
+                    Expanded(
+                        child: IconButton(
+                          icon: const Icon(Icons.drag_indicator ), onPressed: () {
+                          print("move");
+                        },
+                        )
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 25),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Assigned to:",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12),
+                            ),
+                            Text(
+                              "Matt N",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ],
                         ),
-                  ]
-                    )
+                      ),
+                    ),
                   ],
-                )
-              )
+                ),
+              ),
+              Container(
+                decoration:const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.black38,
+
+                    ),
+                  ),
+                ),
+                height: 120,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 40.0, top:10),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          "This is the task title",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top:10.0, right:40),
+                          child: Text(
+                              "This is the description of what needs to be done for this task",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              )
+                          ),
+                        ),
+                      ]
+                  ),
+                ),
+
+
+              ),
+              Row(
+                children: [
+                  Container(
+                    decoration:const BoxDecoration(
+                      border: Border(
+                        right: BorderSide(
+                          color: Colors.black38,
+
+                        ),
+                      ),
+                    ),
+                    child: SizedBox(
+                      width: 220,
+                      child: Padding(
+                        padding: EdgeInsets.only(left:40.0 ),
+                        child: TextButton(
+                          child: const Text(
+                            "Edit",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18),
+
+                          ),
+                          onPressed: (){
+                            print('Pressed');
+                          },
+
+                        ),
+
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: TextButton(
+                      child: const Text(
+                        "Done",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18),
+
+                      ),
+                      onPressed: (){
+                        print('Pressed');
+                      },
+
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
-      ],
-    );
+
+
+        ]);
   }
 }
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:make_hay/services/auth.dart';
 
 class SideMenu extends StatelessWidget {
 
-  const SideMenu({super.key});
+  final AuthService _auth =AuthService();
+
   // Function _doSomething(){}
 
   @override
@@ -12,23 +14,40 @@ class SideMenu extends StatelessWidget {
         children:<Widget>[
           ListTile(
             leading: const Icon(Icons.portrait_rounded),
-            title: const Text("Profile"),
-            onTap: (){
-              // _doSomething();
-              Navigator.pop(context);
+            title: const Text("Profile",
+              style: TextStyle(
+                  color:Colors.black54
+              ),),
+            onTap: () async {
+              await _auth.signOut();
             },
           ),
           const ListTile(
             leading: Icon(Icons.circle_notifications),
-            title: Text("Notifications"),
+            title: Text(
+                "Notifications",
+                style: TextStyle(
+                  color:Colors.black54
+                ),
+            ),
           ),
           const ListTile(
             leading: Icon(Icons.hail),
-            title: Text('Payment Info'),
+            title: Text('Payment Info',
+              style: TextStyle(
+                  color:Colors.black54
+              ),),
           ),
-          const ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout',
+              style: TextStyle(
+                  color:Colors.black54
+              ),
+            ),
+            onTap: () async {
+              await _auth.signOut();
+            },
           ),
 
         ],

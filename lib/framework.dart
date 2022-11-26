@@ -2,9 +2,8 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-import './sidemenu/sidemenu.dart';
 import 'models/navbar_selected_model.dart';
+import 'sidemenu/sidemenu.dart';
 
 class Framework extends StatelessWidget{
   const Framework({super.key});
@@ -25,7 +24,7 @@ class Framework extends StatelessWidget{
                     centerTitle: true,
                     backgroundColor: Colors.black,
                   ),
-                  drawer: const SideMenu(),
+                  drawer: SideMenu(),
                   bottomNavigationBar: Container(
                     height: 70,
                     margin: const EdgeInsets.only(bottom: 20, left: 20, right:20),

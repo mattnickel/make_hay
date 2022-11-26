@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:make_hay/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../framework.dart';
@@ -16,10 +17,11 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen(this.errorMessage);
   @override
 
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends State<LoginScreen> {
+  final AuthService _auth = AuthService();
   late SharedPreferences prefs;
   late Image backgroundImage;
   bool _isLoading = false;
@@ -45,11 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
   _getEmail() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     email = prefs.getString("email")!;
-    if (email != null) {
-      setState(() {
-        emailController.text = email;
-      });
-    }
+    setState(() {
+      emailController.text = email;
+    });
   }
   _enableSignin() {
     setState(() {
@@ -68,8 +68,17 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading = true;
           });
           // signIn(emailController.text, passwordController.text, context, prefs);
-          await Future.delayed(Duration(seconds: 1));
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
+          dynamic result = await _auth.signInAnon();
+          if (result== null){
+            print('error signing in');
+          } else {
+            print ('signed in');
+            print(result.uid);
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
+          }
+          // ]
+          // await Future.delayed(Duration(seconds: 1));
+          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
         },
 
         style: ElevatedButton.styleFrom(

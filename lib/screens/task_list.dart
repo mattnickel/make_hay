@@ -8,10 +8,10 @@ import '../services/api_get.dart';
 
 class TaskList extends StatefulWidget {
 
-  String category;
-  int index;
+  late String category;
+  // int index;
 
-  TaskList({ required this.category, required this.index});
+  // TaskList({ required this.category, required this.index});
 
   @override
   State<TaskList> createState() => _TaskListState();
@@ -53,7 +53,7 @@ class _TaskListState extends State<TaskList> {
     //                       itemCount: 1,
     //                       itemBuilder: (context, index) {
     //                         return TaskTile(
-    //                             task: snapshot.data
+    //                             tasks: snapshot.data
     //                         );
     //                       },
     //                     )
@@ -100,7 +100,7 @@ class _TaskListState extends State<TaskList> {
             bottom: 160,
             right: 45,
             child: FloatingActionButton(
-                backgroundColor: Color(0xFF09eebc),
+                backgroundColor: Color(0xFFC23B00),
                 onPressed: () async {
 
                 },

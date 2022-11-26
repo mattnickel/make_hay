@@ -12,13 +12,13 @@ import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   final String errorMessage;
-  SignupScreen(this.errorMessage);
+  const SignupScreen(this.errorMessage, {super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  SignupScreenState createState() => SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class SignupScreenState extends State<SignupScreen> {
   final GlobalKey<FormBuilderState> _formBKey = GlobalKey<FormBuilderState>();
   late SharedPreferences prefs;
   late Image backgroundImage;
@@ -187,8 +187,12 @@ class _SignupScreenState extends State<SignupScreen> {
       height: 50.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ElevatedButton(
-        onPressed: emailController.text == "" || passwordController.text == "" || joincodeController.text == ""|| accepted== false ? null : () {
-          signUp(emailController.text, passwordController.text, joincodeController.text, context);
+        onPressed: emailController.text == "" || passwordController.text == "" || joincodeController.text == ""|| accepted== false ? null : () async {
+          setState(() {
+            _isLoading = true;
+          });
+
+          // signUp(emailController.text, passwordController.text, joincodeController.text, context);
         //   if (_formBKey.currentState.validate()) {
         //     print("valid");
         //     signUp(emailController.text, passwordController.text, joincodeController.text, context);
