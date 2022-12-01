@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:make_hay/screens/signup_screen.dart';
 import 'package:make_hay/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,8 +14,8 @@ import '../services/api_login.dart';
 
 
 class LoginScreen extends StatefulWidget {
-  final String errorMessage;
-  const LoginScreen(this.errorMessage);
+  final Function toggleView;
+  LoginScreen({required this.toggleView});
   @override
 
   LoginScreenState createState() => LoginScreenState();
@@ -27,8 +28,10 @@ class LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   bool _isEnabled = false;
   late String email;
+  late String uid;
   late String privacyInfo;
   late String termsInfo;
+  String error='';
   Future<String> loadAsset(String s) async {
     return await rootBundle.loadString(s);
   }
@@ -40,9 +43,31 @@ class LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     _getEmail();
-    // Start listening to changes.
     emailController.addListener(_enableSignin);
     passwordController.addListener(_enableSignin);
+  }
+  RichText newUserSection(context) {
+    return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            text: 'New user?  ',
+            style: const TextStyle(
+                color: Colors.white70
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: "Sign up",
+                style: const TextStyle(
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    widget.toggleView();
+                  },
+              )
+            ]
+        )
+    );
   }
   _getEmail() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -50,6 +75,12 @@ class LoginScreenState extends State<LoginScreen> {
     setState(() {
       emailController.text = email;
     });
+  }
+  _setUserPrefs(id) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    email = emailController.text;
+    prefs.setString("email", email)!;
+    prefs.setString("uid", id)!;
   }
   _enableSignin() {
     setState(() {
@@ -67,14 +98,14 @@ class LoginScreenState extends State<LoginScreen> {
           setState(() {
             _isLoading = true;
           });
-          // signIn(emailController.text, passwordController.text, context, prefs);
-          dynamic result = await _auth.signInAnon();
+          dynamic result = await _auth.signInWithEmailAndPassword(emailController.text, passwordController.text);
+          _setUserPrefs(result.uid);
           if (result== null){
             print('error signing in');
           } else {
             print ('signed in');
             print(result.uid);
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
+            // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
           }
           // ]
           // await Future.delayed(Duration(seconds: 1));
@@ -132,7 +163,7 @@ class LoginScreenState extends State<LoginScreen> {
                 newUserSection(context),
                 const Padding(padding: EdgeInsets.only(top:300)),
                 formSection(emailController, passwordController),
-                errorSection(widget.errorMessage),
+                errorSection(error),
                 buttonSection(),
                 forgotPasswordSection(context),
 

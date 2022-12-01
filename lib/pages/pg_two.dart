@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:make_hay/screens/task_list.dart';
+import 'package:make_hay/screens/task_list_screen.dart';
+import 'package:provider/provider.dart';
 
+import '../models/task_model.dart';
 import '../page_widgets/task_tile.dart';
+import '../services/auth.dart';
+import '../services/database.dart';
 
 
 
 class Two extends StatelessWidget {
-  const Two({super.key});
 
+  final AuthService _auth = AuthService();
   @override
 
   Widget build(BuildContext context) {
-    return
+    return StreamProvider<Iterable<Task>>.value(
+        value: DatabaseService(uid: '').tasks,
+        initialData: [],
+        child:
       DefaultTabController(
           length: 3,
           child: Column(
@@ -68,9 +75,9 @@ class Two extends StatelessWidget {
                 Expanded(
                     child: TabBarView(
                       children: [
-                        TaskTile(),
-                        TaskList(),
-                        TaskList(),
+                        TaskListScreen(),
+                        TaskListScreen(),
+                        TaskListScreen(),
                         // TaskList("Completed"),
                         // TaskList("Archived"),
                       ],
@@ -79,8 +86,8 @@ class Two extends StatelessWidget {
 
               ]
           )
-      );
+      )
+    );
   }
 
-  void doSomething() {}
 }

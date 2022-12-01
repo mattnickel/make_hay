@@ -1,19 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../screen_widgets/signup_signin_widgets.dart';
 
 import '../popups/terms_popup.dart';
 import '../services/api_login.dart';
+import '../services/auth.dart';
 import 'login_screen.dart';
 
 
 class SignupScreen extends StatefulWidget {
-  final String errorMessage;
-  const SignupScreen(this.errorMessage, {super.key});
-
+  final Function toggleView;
+  SignupScreen({required this.toggleView});
   @override
   SignupScreenState createState() => SignupScreenState();
 }
@@ -28,11 +29,12 @@ class SignupScreenState extends State<SignupScreen> {
   late String privacyInfo;
   late String termsInfo;
   bool _showGroup = false;
-
+  final AuthService _auth = AuthService();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   // final usernameController = TextEditingController();
   final joincodeController = TextEditingController();
+  String error='';
 
   @override
   void initState() {
@@ -52,7 +54,30 @@ class SignupScreenState extends State<SignupScreen> {
   Future<String> loadAsset(String s) async {
     return await rootBundle.loadString(s);
   }
-
+  RichText returningUserSection(context){
+    return RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+            text:'Already Signed Up?  ',
+            style: const TextStyle(
+                color: Colors.white70
+            ),
+            children: <TextSpan>[
+              TextSpan(
+                text: "Log in",
+                style: const TextStyle(
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    widget.toggleView();
+                    // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen("")), (Route<dynamic> route) => false);
+                  },
+              )
+            ]
+        )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +117,7 @@ class SignupScreenState extends State<SignupScreen> {
                 returningUserSection(context),
                 const Padding(padding: EdgeInsets.only(top:300)),
                 signupFormSection(),
-                errorSection(widget.errorMessage),
+                errorSection(error),
                 buttonSection(),
 
               ],
@@ -187,21 +212,23 @@ class SignupScreenState extends State<SignupScreen> {
       height: 50.0,
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: ElevatedButton(
-        onPressed: emailController.text == "" || passwordController.text == "" || joincodeController.text == ""|| accepted== false ? null : () async {
-          setState(() {
-            _isLoading = true;
-          });
+        onPressed: emailController.text == "" || passwordController.text == "" || accepted== false ? null : () async {
 
-          // signUp(emailController.text, passwordController.text, joincodeController.text, context);
-        //   if (_formBKey.currentState.validate()) {
-        //     print("valid");
-        //     signUp(emailController.text, passwordController.text, joincodeController.text, context);
-        //     setState(() {
-        //       _isLoading = true;
-        //     });
-        //   }
-        //   else print("not valid");
-        //
+          if (_formBKey.currentState!.validate()) {
+            setState(() {
+              _isLoading = true;
+            });
+            dynamic result = await _auth.signUp(emailController.text, passwordController.text);
+            if (result == null){
+              setState(() {
+                _isLoading = false;
+                error = 'Error here';
+              });
+            }
+
+          }
+          else print("not valid");
+
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFC23B00),
@@ -248,7 +275,7 @@ class SignupScreenState extends State<SignupScreen> {
               child: FormBuilderTextField(
 
                 controller: emailController,
-                // validators: [FormBuilderValidators.email(),FormBuilderValidators.required()],
+                // validator: [FormBuilderValidators.email(),FormBuilderValidators.required()],
                 cursorColor: Colors.black54,
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Colors.black54),
@@ -276,7 +303,7 @@ class SignupScreenState extends State<SignupScreen> {
             Container(
               child: FormBuilderTextField(
                 controller: passwordController,
-                // validators:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
+                // validator:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
                 cursorColor: Colors.black54,
                 obscureText: true,
                 style: const TextStyle(color: Colors.black54),
@@ -329,7 +356,7 @@ class SignupScreenState extends State<SignupScreen> {
               child: Container(
                 child: FormBuilderTextField(
                   controller: joincodeController,
-                  // validators: FormBuilderValidators.min(6)],
+                  // validator: FormBuilderValidator.min(6)],
                   cursorColor: Colors.black54,
                   style: const TextStyle(color: Colors.black54),
                   decoration: const InputDecoration(

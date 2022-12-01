@@ -27,29 +27,30 @@ Container headerSection(context, headerText) {
     ),
   );
 }
-RichText returningUserSection(context){
-  return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text:'Already Signed Up?  ',
-          style: const TextStyle(
-              color: Colors.white70
-          ),
-          children: <TextSpan>[
-            TextSpan(
-              text: "Log in",
-              style: const TextStyle(
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: new TapGestureRecognizer()
-                ..onTap = () {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen("")), (Route<dynamic> route) => false);
-                },
-            )
-          ]
-      )
-  );
-}
+// RichText returningUserSection(context){
+//   return RichText(
+//       textAlign: TextAlign.center,
+//       text: TextSpan(
+//           text:'Already Signed Up?  ',
+//           style: const TextStyle(
+//               color: Colors.white70
+//           ),
+//           children: <TextSpan>[
+//             TextSpan(
+//               text: "Log in",
+//               style: const TextStyle(
+//                 decoration: TextDecoration.underline,
+//               ),
+//               recognizer: new TapGestureRecognizer()
+//                 ..onTap = () {
+//                   widget.toggleView()
+//                   // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen("")), (Route<dynamic> route) => false);
+//                 },
+//             )
+//           ]
+//       )
+//   );
+// }
 
 Container formSection(emailController, passwordController) {
   return Container(
@@ -94,8 +95,8 @@ Container formSection(emailController, passwordController) {
         TextFormField(
           controller: passwordController,
           validator: (value) {
-            if (value == null) {
-              return 'Password cannot be empty';
+            if (value != null  && value.length < 6) {
+              return 'Password must have 6+ characters';
             }
             return null;
           },
@@ -128,10 +129,10 @@ Container formSection(emailController, passwordController) {
   );
 }
 
-Container errorSection(message){
+Container errorSection(error){
   return Container(
     child:
-    message.length > 1
+    error.length > 1
         ? Center(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10.0),
@@ -141,7 +142,7 @@ Container errorSection(message){
             children: [
               const Icon(Icons.error_outline), const SizedBox(width: 5.0),
               Text(
-                  message
+                  error
               ),
             ],
           ),
@@ -216,29 +217,29 @@ Positioned termsSection(termsInfo, privacyInfo, context){
     ),
   );
 }
-RichText newUserSection(context){
-  return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text:'New user?  ',
-          style: const TextStyle(
-              color: Colors.white70
-          ),
-          children: <TextSpan>[
-            TextSpan(
-              text: "Sign up",
-              style: const TextStyle(
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: new TapGestureRecognizer()
-                ..onTap = () {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupScreen("")), (Route<dynamic> route) => false);
-                },
-            )
-          ]
-      )
-  );
-}
+// RichText newUserSection(context){
+//   return RichText(
+//       textAlign: TextAlign.center,
+//       text: TextSpan(
+//           text:'New user?  ',
+//           style: const TextStyle(
+//               color: Colors.white70
+//           ),
+//           children: <TextSpan>[
+//             TextSpan(
+//               text: "Sign up",
+//               style: const TextStyle(
+//                 decoration: TextDecoration.underline,
+//               ),
+//               recognizer: new TapGestureRecognizer()
+//                 ..onTap = () {
+//                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupScreen()), (Route<dynamic> route) => false);
+//                 },
+//             )
+//           ]
+//       )
+//   );
+// }
 Align forgotPasswordSection(context){
   return Align(
     alignment: Alignment.center,
