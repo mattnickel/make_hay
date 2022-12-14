@@ -11,7 +11,9 @@ import '../screen_widgets/task_list.dart';
 import '../services/api_get.dart';
 
 class TaskListScreen extends StatelessWidget {
-  const TaskListScreen({super.key});
+  String status;
+  TaskListScreen(this.status, {super.key});
+
 
 
   @override
@@ -31,7 +33,7 @@ class TaskListScreen extends StatelessWidget {
                .size
                .width,
          ),
-         const TaskList(),
+         TaskList(status),
          Positioned(
              bottom: 160,
              right: 45,

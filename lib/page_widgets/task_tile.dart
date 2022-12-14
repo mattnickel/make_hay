@@ -99,14 +99,7 @@ class TaskTile extends StatelessWidget {
                 ),
               ),
               Container(
-                decoration:const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.black38,
 
-                    ),
-                  ),
-                ),
                 height: 120,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 40.0, top:10),
@@ -137,19 +130,20 @@ class TaskTile extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Container(
-                    decoration:const BoxDecoration(
-                      border: Border(
-                        right: BorderSide(
-                          color: Colors.black38,
-
-                        ),
-                      ),
-                    ),
-                    child: SizedBox(
-                      width: 220,
-                      child: Padding(
-                        padding: EdgeInsets.only(left:40.0 ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration:const BoxDecoration(
+                          border: Border(
+                          right: BorderSide(
+                            color: Colors.black38,
+                              ),
+                              top:BorderSide(
+                                color: Colors.black38,
+                              ),
+                          ),
+                          ),
+                        padding: const EdgeInsets.only(left:40.0 ),
                         child: TextButton(
                           child: const Text(
                             "Edit",
@@ -167,21 +161,30 @@ class TaskTile extends StatelessWidget {
 
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 200,
-                    child: TextButton(
-                      child: const Text(
-                        "Done",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18),
+
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      decoration:const BoxDecoration(
+                        border: Border(
+                          top:BorderSide(
+                            color: Colors.black38,
+                          ),
+                        ),
+                      ),
+                      child: TextButton(
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18),
+
+                        ),
+                        onPressed: (){
+                          print('Pressed');
+                        },
 
                       ),
-                      onPressed: (){
-                        print('Pressed');
-                      },
-
                     ),
                   ),
                 ],

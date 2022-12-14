@@ -75,9 +75,9 @@ class Two extends StatelessWidget {
                 Expanded(
                     child: TabBarView(
                       children: [
-                        TaskListScreen(),
-                        TaskListScreen(),
-                        TaskListScreen(),
+                        TaskListScreen("active"),
+                        TaskListScreen("completed"),
+                        TaskListScreen("archived"),
                         // TaskList("Completed"),
                         // TaskList("Archived"),
                       ],

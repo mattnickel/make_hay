@@ -113,7 +113,7 @@ class UpdateTaskState extends State<UpdateTask> {
               Padding(padding: const EdgeInsets.only(top:20),
                   child:ElevatedButton(
                     onPressed:  titleController.text == "" || descriptionController.text == "" ? null : () async {
-                      dynamic result = DatabaseService(uid: uid).updateTasks(titleController.text, descriptionController.text);
+                      dynamic result = DatabaseService(uid: uid).updateTasks(titleController.text, descriptionController.text, "active");
                       if (result== null){
                         print('error creating task');
                       } else {

@@ -4,6 +4,7 @@ class Task {
   // int id;
   String title;
   String description;
+  String status;
 
   // String dueDate;
   // String assignedTo;
@@ -12,6 +13,7 @@ class Task {
   Task({
     required this.title,
     required this.description,
+    required this.status,
     // required this.dueDate,
     // required this.assignedTo
   });

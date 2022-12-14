@@ -5,7 +5,8 @@ import '../models/task_model.dart';
 import '../page_widgets/task_tile.dart';
 
 class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+  String status;
+  TaskList(this.status, {super.key});
 
 
   @override
@@ -16,16 +17,12 @@ class _TaskListState extends State<TaskList> {
   @override
   Widget build(BuildContext context) {
     final tasks = Provider.of<List<Task>>(context);
-    if (tasks != null){
+    List<Task> filteredTasks= tasks.where((task)=>task.status == widget.status).toList();
       return ListView.builder(
-        itemCount: tasks.length ?? 0,
+        itemCount: filteredTasks.length ?? 0,
         itemBuilder: (context, index) {
-          return TaskTile(tasks[index]);
+          return TaskTile(filteredTasks[index]);
       }
-
       );
-    }else{
-      return Container();
-    }
     }
   }
