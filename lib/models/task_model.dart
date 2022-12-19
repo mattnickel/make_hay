@@ -1,16 +1,19 @@
 import 'dart:convert';
 
 class Task {
-  // int id;
+
   String title;
   String description;
   String status;
+  String taskId;
 
   // String dueDate;
   // String assignedTo;
 
 
   Task({
+
+    required this.taskId,
     required this.title,
     required this.description,
     required this.status,

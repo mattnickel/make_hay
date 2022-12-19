@@ -25,10 +25,16 @@ class DatabaseService{
       'status':taskStatus
     });
   }
+  Future<void> updateTaskStatus(String taskId, String taskStatus) async {
+    return await tasksCollection.doc(taskId).update({
+      'status':taskStatus
+    });
+  }
   List<Task> _taskListFromSnapshot(QuerySnapshot snapshot){
     final query = tasksCollection.where("status", isEqualTo: "active");
     return snapshot.docs.map((doc){
         return Task(
+            taskId: doc.id,
             title: doc.data().toString().contains('task')
                 ? doc.get('task')
                 : '',
