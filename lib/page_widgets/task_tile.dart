@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/task_model.dart';
+import '../screens/update_task.dart';
 import '../services/database.dart';
 
 
@@ -15,7 +16,7 @@ class TaskTile extends StatelessWidget {
   TaskTile(this.task, {super.key});
   @override
   Widget build(BuildContext context) {
-    String newStatus = (task.status == "active")?"completed":"archived";
+    String newStatus;
     switch (task.status) {
       case "completed": {
         newStatus ="archived";
@@ -178,7 +179,8 @@ class TaskTile extends StatelessWidget {
                                 fontSize: 18),
 
                           ),
-                          onPressed: (){
+                          onPressed: ()async{
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:task)));
                             print('Pressed');
                           },
 

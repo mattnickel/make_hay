@@ -40,7 +40,7 @@ class TaskListScreen extends StatelessWidget {
              child: FloatingActionButton(
                  backgroundColor: Color(0xFFC23B00),
                  onPressed: () async {
-                   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask()));
+                   Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => const UpdateTask()));
                  },
                  child:
                  const Icon(Icons.add, color: Colors.white)
