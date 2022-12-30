@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Task {
 
   String title;
-  String description;
+  String? description;
   String status;
   String taskId;
+  Timestamp? dueDate;
 
   // String dueDate;
   // String assignedTo;
@@ -15,9 +18,9 @@ class Task {
 
     required this.taskId,
     required this.title,
-    required this.description,
+    this.description,
     required this.status,
-    // required this.dueDate,
+    this.dueDate,
     // required this.assignedTo
   });
 

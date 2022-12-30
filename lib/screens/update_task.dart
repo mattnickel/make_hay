@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:make_hay/services/database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +11,9 @@ import '../models/user.dart';
 
 class UpdateTask extends StatefulWidget {
   final Task? taskObject;
-  const UpdateTask({super.key, this.taskObject});
+  final String action;
+
+  const UpdateTask({super.key, this.taskObject, required this.action});
 
   @override
   UpdateTaskState createState() => UpdateTaskState();
@@ -19,18 +23,31 @@ class UpdateTaskState extends State<UpdateTask> {
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final timeController = TextEditingController();
   late String status;
   bool _isEnabled = false;
   late final CollectionReference taskCollection;
   late String uid;
-  late Task task;
+  late Task? task;
+  bool dateOn= false;
+  late DateTime dueDate;
+  DateTime selectedDate = DateTime.now();
+  DateTime? picked;
+  late String titleAction;
 
   @override
   void initState() {
     super.initState();
     titleController.addListener(_enable);
     descriptionController.addListener( _enable);
-    Task? task = widget.taskObject;
+    task = widget.taskObject;
+    titleController.text =task?.title ?? "";
+    descriptionController.text= task?.description ?? "";
+    timeController.text = widget.taskObject?.dueDate != null ? DateFormat('MM/dd/yy').format(DateTime.parse(task!.dueDate!.toDate().toString())).toString() : "";
+    dateOn = widget.taskObject?.dueDate != null;
+    status = widget.taskObject?.status ?? "active";
+    titleAction = widget.action;
+
     _getId;
 
   }
@@ -71,11 +88,11 @@ class UpdateTaskState extends State<UpdateTask> {
             child: Column(
               children: [
 
-              const Padding(
+              Padding(
             padding: EdgeInsets.only(top:100, left:20, right:20),
             child: Padding(padding: EdgeInsets.only(bottom:30),
-                child: Text("Create/Update Task",
-                    style:TextStyle(
+                child: Text("$titleAction Task",
+                    style:const TextStyle(
                       color: Colors.white,
                       fontSize:30,
                       fontWeight: FontWeight.bold,
@@ -94,7 +111,8 @@ class UpdateTaskState extends State<UpdateTask> {
               return null;
             },
             cursorColor: Colors.black54,
-            style: const TextStyle(color: Colors.black54),
+            style: const TextStyle(color: Colors.black),
+
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                   vertical: 16.0, horizontal: 10.0),
@@ -105,7 +123,7 @@ class UpdateTaskState extends State<UpdateTask> {
               border: InputBorder.none,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                borderSide: BorderSide(color: Color(00000000)),
+                borderSide: BorderSide(color: Color(0x00000000)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -124,7 +142,7 @@ class UpdateTaskState extends State<UpdateTask> {
                 return null;
               },
               cursorColor: Colors.black54,
-              style: const TextStyle(color: Colors.black54),
+              style: const TextStyle(color: Colors.black),
               decoration: const InputDecoration(
                 contentPadding: EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 10.0),
@@ -135,7 +153,7 @@ class UpdateTaskState extends State<UpdateTask> {
                 border: InputBorder.none,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  borderSide: BorderSide(color: Color(00000000)),
+                  borderSide: BorderSide(color: Color(0x00000000)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -148,6 +166,7 @@ class UpdateTaskState extends State<UpdateTask> {
               Padding(padding: const EdgeInsets.only(top:20),
             child: DropdownButtonFormField(
               // itemHeight:50,
+
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.only(top:0, bottom:0, left:10),
                 focusedBorder: OutlineInputBorder(
@@ -166,7 +185,6 @@ class UpdateTaskState extends State<UpdateTask> {
                 fillColor: Colors.white,
               ),
               dropdownColor: Colors.white,
-
               style: const TextStyle(color: Colors.black, fontSize: 16),
               borderRadius: const BorderRadius.all(Radius.circular(8.0)),
               value: widget.taskObject?.status.toString() ?? "active",
@@ -183,12 +201,77 @@ class UpdateTaskState extends State<UpdateTask> {
             ),
 
               ),
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(left:8.0),
+                      child: Text("Assign a due date:",
+                          style:TextStyle(color:Colors.white70)
+                      ),
+                    ),
+                    const Spacer(),
+                    Switch(
+                        activeColor: const Color(0xFFC23B00),
+                        inactiveTrackColor: Colors.white12,
+                        value: dateOn,
+                        onChanged: (val) async {
+                          setState(() {
+                            dateOn =val;
+                          });
+                        }
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 0.0),
+                Visibility(
+                  visible: dateOn,
+                  child: DateTimeField(
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                    decoration: const InputDecoration(floatingLabelBehavior: FloatingLabelBehavior.never,
+                        fillColor: Colors.white,
+                        filled: true,
+                        contentPadding: EdgeInsets.only(top:15, bottom:0, left:10),
+                        enabled: true,
+                          border: OutlineInputBorder(
+
+                          )
+                        // labelText: "Select Date",
+
+
+                      ),
+                      controller: timeController,
+                      format: DateFormat.yMMMEd(),
+                      // initialValue: task?.dueDate! ?? null,
+                      // decoration: const InputDecoration(
+                      //     labelText: "Select Time:"
+                      // ),
+                      onShowPicker: (context, currentValue) async {
+                        picked = (await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime.now(),
+                          lastDate:DateTime.now().add(const Duration(days:365)
+                        )))!;
+                          if (picked != selectedDate) {
+                            setState(() {
+                              selectedDate = picked!;
+                            });
+                          }
+                        return selectedDate;
+                      },
+                      onChanged: (tex) {
+                        setState(() {});
+                      },
+                      onSaved: (input) => dueDate = input!
+                  ),
+                ),
+                const SizedBox(height: 10.0),
               Container(
                 padding: const EdgeInsets.only(top:20),
             width:MediaQuery.of(context).size.width,
             child:ElevatedButton(
               onPressed:  titleController.text == "" || descriptionController.text == "" ? null : () async {
-                dynamic result = DatabaseService(uid: uid).updateTasks(titleController.text, descriptionController.text, status);
+                dynamic result = DatabaseService(uid: uid).updateTasks(titleController.text, descriptionController.text, status, picked );
                 if (result== null){
                   print('error creating task');
                 } else {
@@ -208,7 +291,7 @@ class UpdateTaskState extends State<UpdateTask> {
                 elevation: 0.2,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
               ),
-              child: const Text("Save Task", style: TextStyle(color: Colors.white, fontSize: 16)),
+              child: Text("$titleAction Task", style: const TextStyle(color: Colors.white, fontSize: 16)),
 
             ),
               ),

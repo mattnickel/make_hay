@@ -17,7 +17,7 @@ class Wrapper extends StatelessWidget {
             stream: _auth.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Framework();
+                return const Framework();
               } else {
                 return Authenticate();
               }

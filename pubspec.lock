@@ -71,6 +71,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  datetime_picker_formfield:
+    dependency: "direct main"
+    description:
+      name: datetime_picker_formfield
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  day:
+    dependency: "direct main"
+    description:
+      name: day
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.0"
   fake_async:
     dependency: transitive
     description:

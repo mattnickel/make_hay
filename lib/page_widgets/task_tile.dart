@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:day/day.dart';
 import '../models/task_model.dart';
 import '../screens/update_task.dart';
 import '../services/database.dart';
@@ -10,10 +12,11 @@ import '../services/database.dart';
 
 
 
+
 class TaskTile extends StatelessWidget {
   final Task task;
 
-  TaskTile(this.task, {super.key});
+ const TaskTile(this.task, {super.key});
   @override
   Widget build(BuildContext context) {
     String newStatus;
@@ -41,6 +44,7 @@ class TaskTile extends StatelessWidget {
       } break;
     }
     print (task.taskId);
+    late String date = DateFormat('MM/dd/yy').format(DateTime.parse(task.dueDate!.toDate().toString())).toString();
     return Stack(
         children:[
           Container(
@@ -69,19 +73,19 @@ class TaskTile extends StatelessWidget {
                     SizedBox(
                       width: 150,
                       child: Padding(
-                        padding: EdgeInsets.only(left:40.0, top: 25),
+                        padding: const EdgeInsets.only(left:40.0, top: 25),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Due:",
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 12),
                             ),
                             Text(
-                              "12/25/22",
-                              style: TextStyle(
+                              task.dueDate == null ? "" : date,
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
@@ -91,37 +95,37 @@ class TaskTile extends StatelessWidget {
                       ),
                     ),
 
-                    Expanded(
-                        child: IconButton(
-                          icon: const Icon(Icons.drag_indicator ), onPressed: () {
-                          print("move");
-                        },
-                        )
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 25),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Assigned to:",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12),
-                            ),
-                            Text(
-                              "Matt N",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Expanded(
+                    //     child: IconButton(
+                    //       icon: const Icon(Icons.drag_indicator ), onPressed: () {
+                    //       print("move");
+                    //     },
+                    //     )
+                    // ),
+                    // SizedBox(
+                    //   width: 150,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(top: 25),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: const [
+                    //         Text(
+                    //           "Assigned to:",
+                    //           style: TextStyle(
+                    //               color: Colors.black,
+                    //               fontSize: 12),
+                    //         ),
+                    //         Text(
+                    //           "Matt N",
+                    //           style: TextStyle(
+                    //               color: Colors.black,
+                    //               fontWeight: FontWeight.bold,
+                    //               fontSize: 18),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -180,7 +184,7 @@ class TaskTile extends StatelessWidget {
 
                           ),
                           onPressed: ()async{
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:task)));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:task, action:"Update")));
                             print('Pressed');
                           },
 
@@ -204,7 +208,7 @@ class TaskTile extends StatelessWidget {
                       TextButton(
                         child: Text(
                           quickAction,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.black,
                               fontSize: 18),
 

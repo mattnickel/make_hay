@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/task_model.dart';
 
@@ -17,12 +17,13 @@ class DatabaseService{
       'name': name,
     });
   }
-  Future<void> updateTasks(String taskName, String taskDescription, String taskStatus) async {
+  Future<void> updateTasks(taskName, taskDescription, taskStatus, date) async {
     return await tasksCollection.doc().set({
       'user': uid,
       'task': taskName,
       'description': taskDescription,
-      'status':taskStatus
+      'status':taskStatus,
+      'due': date,
     });
   }
   Future<void> updateTaskStatus(String taskId, String taskStatus) async {
@@ -42,7 +43,10 @@ class DatabaseService{
                 .get('description') : '',
             status: doc.data().toString().contains('status')
                 ? doc.get('status')
-                : ''
+                : '',
+            dueDate: doc.data().toString().contains('due')
+                ? doc.get('due')
+                : null,
         );
       
     }).toList();
