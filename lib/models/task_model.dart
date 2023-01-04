@@ -5,7 +5,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Task {
 
   String title;
-  String? description;
+  Object? subtask1;
+  Object? subtask2;
+  Object? subtask3;
+  String? subtask1Title;
+  bool? subtask1Status;
+  String? subtask2Title;
+  bool? subtask2Status;
+  String? subtask3Title;
+  bool? subtask3Status;
   String status;
   String taskId;
   Timestamp? dueDate;
@@ -15,14 +23,20 @@ class Task {
 
 
   Task({
-
     required this.taskId,
     required this.title,
-    this.description,
+    this.subtask1Title,
+    this.subtask1Status,
+    this.subtask2Title,
+    this.subtask2Status,
+    this.subtask3Title,
+    this.subtask3Status,
     required this.status,
     this.dueDate,
     // required this.assignedTo
   });
+
+
 
 }
 //   factory Task.fromJson(Map<String, dynamic> json) =>Task(

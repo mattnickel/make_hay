@@ -12,55 +12,49 @@ import '../models/user.dart';
 class UpdateTask extends StatefulWidget {
   final Task? taskObject;
   final String action;
+  final String uid;
 
-  const UpdateTask({super.key, this.taskObject, required this.action});
+
+  const UpdateTask({super.key, this.taskObject, required this.uid, required this.action});
 
   @override
   UpdateTaskState createState() => UpdateTaskState();
 
 }
 class UpdateTaskState extends State<UpdateTask> {
-
   final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
   final timeController = TextEditingController();
+  final subtask1Controller = TextEditingController();
+  final subtask2Controller = TextEditingController();
+  final subtask3Controller = TextEditingController();
   late String status;
-  bool _isEnabled = false;
   late final CollectionReference taskCollection;
-  late String uid;
   late Task? task;
   bool dateOn= false;
+  bool statusOn= false;
   late DateTime dueDate;
   DateTime selectedDate = DateTime.now();
   DateTime? picked;
   late String titleAction;
 
+
   @override
   void initState() {
     super.initState();
-    titleController.addListener(_enable);
-    descriptionController.addListener( _enable);
     task = widget.taskObject;
+    // titleController.addListener(_getId);
     titleController.text =task?.title ?? "";
-    descriptionController.text= task?.description ?? "";
+    subtask1Controller.text =task?.subtask1Title ?? "";
+    subtask2Controller.text =task?.subtask2Title ?? "";
+    subtask3Controller.text =task?.subtask3Title ?? "";
     timeController.text = widget.taskObject?.dueDate != null ? DateFormat('MM/dd/yy').format(DateTime.parse(task!.dueDate!.toDate().toString())).toString() : "";
     dateOn = widget.taskObject?.dueDate != null;
+    statusOn = widget.taskObject?.status != "";
     status = widget.taskObject?.status ?? "active";
     titleAction = widget.action;
 
-    _getId;
+  }
 
-  }
-  _getId()async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    uid= prefs.getString("uid")!;
-  }
-  _enable() {
-    setState(() {
-      _isEnabled = true;
-    });
-    _getId();
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,8 +83,8 @@ class UpdateTaskState extends State<UpdateTask> {
               children: [
 
               Padding(
-            padding: EdgeInsets.only(top:100, left:20, right:20),
-            child: Padding(padding: EdgeInsets.only(bottom:30),
+            padding: const EdgeInsets.only(top:100, left:20, right:20),
+            child: Padding(padding: const EdgeInsets.only(bottom:30),
                 child: Text("$titleAction Task",
                     style:const TextStyle(
                       color: Colors.white,
@@ -132,15 +126,9 @@ class UpdateTaskState extends State<UpdateTask> {
               hintStyle: TextStyle(color: Colors.black54),
             ),
               ),
-              Padding(padding: const EdgeInsets.only(top:20),
+              Padding(padding: const EdgeInsets.only(top:20, left:40),
             child: TextFormField(
-              controller: descriptionController,
-              validator: (value) {
-                if (value == null) {
-                  return 'Task title cannot be empty';
-                }
-                return null;
-              },
+              controller: subtask1Controller,
               cursorColor: Colors.black54,
               style: const TextStyle(color: Colors.black),
               decoration: const InputDecoration(
@@ -149,7 +137,7 @@ class UpdateTaskState extends State<UpdateTask> {
                 filled: true,
                 fillColor: Colors.white,
                 focusColor: Colors.white,
-                hintText: "Task Description",
+                hintText: "SubTask (Optional)",
                 border: InputBorder.none,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -163,41 +151,100 @@ class UpdateTaskState extends State<UpdateTask> {
               ),
             ),
               ),
+                Padding(padding: const EdgeInsets.only(top:20, left:40),
+                  child: TextFormField(
+                    controller: subtask2Controller,
+                    cursorColor: Colors.black54,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 10.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hintText: "SubTask (Optional)",
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: Color(0x00000000)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: Color(0xff00eebc)),
+                      ),
+                      hintStyle: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ),
+                Padding(padding: const EdgeInsets.only(top:20, left:40),
+                  child: TextFormField(
+                    controller: subtask3Controller,
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Task title cannot be empty';
+                      }
+                      return null;
+                    },
+                    cursorColor: Colors.black54,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 16.0, horizontal: 10.0),
+                      filled: true,
+                      fillColor: Colors.white,
+                      focusColor: Colors.white,
+                      hintText: "SubTask (optional)",
+                      border: InputBorder.none,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: Color(0x00000000)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: Color(0xff00eebc)),
+                      ),
+                      hintStyle: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                ),
               Padding(padding: const EdgeInsets.only(top:20),
-            child: DropdownButtonFormField(
-              // itemHeight:50,
+            child: Visibility(
+              visible: dateOn,
+              child: DropdownButtonFormField(
+                // itemHeight:50,
 
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(top:0, bottom:0, left:10),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Color(0xFFC23B00), width: 0),
-                  borderRadius: BorderRadius.circular(8),
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.only(top:0, bottom:0, left:10),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFFC23B00), width: 0),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white, width: 0),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.white, width: 0),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 0),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 0),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                filled: true,
-                fillColor: Colors.white,
+                dropdownColor: Colors.white,
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+                borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                value: widget.taskObject?.status.toString() ?? "active",
+                items: const [
+                  DropdownMenuItem(value: "active", child: Text("Active")),
+                  DropdownMenuItem(value: "completed", child: Text("Completed")),
+                  DropdownMenuItem(value: "archived", child: Text("Archived")),
+                ],
+                onChanged: (value){
+                  setState(() {
+                    status = value.toString();
+                  });
+                },
               ),
-              dropdownColor: Colors.white,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-              borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-              value: widget.taskObject?.status.toString() ?? "active",
-              items: const [
-                DropdownMenuItem(value: "active", child: Text("Active")),
-                DropdownMenuItem(value: "completed", child: Text("Completed")),
-                DropdownMenuItem(value: "archived", child: Text("Archived")),
-              ],
-              onChanged: (value){
-                setState(() {
-                  status = value.toString();
-                });
-              },
             ),
 
               ),
@@ -270,9 +317,35 @@ class UpdateTaskState extends State<UpdateTask> {
                 padding: const EdgeInsets.only(top:20),
             width:MediaQuery.of(context).size.width,
             child:ElevatedButton(
-              onPressed:  titleController.text == "" || descriptionController.text == "" ? null : () async {
-                dynamic result = DatabaseService(uid: uid).updateTasks(titleController.text, descriptionController.text, status, picked );
-                if (result== null){
+              onPressed: () async {
+                dynamic result;
+                if(task != null) {
+                  print(task?.taskId);
+                 result = DatabaseService(uid: widget.uid).updateTasks(
+                    task!.taskId,
+                    titleController.text,
+                    status,
+                    picked,
+                    subtask1Controller.text,
+                    false,
+                    subtask2Controller.text,
+                    false,
+                    subtask3Controller.text,
+                    false,);
+                }else {
+                  result = DatabaseService(uid: widget.uid).updateTasks(
+                    "",
+                    titleController.text,
+                    status,
+                    picked,
+                    subtask1Controller.text,
+                    false,
+                    subtask2Controller.text,
+                    false,
+                    subtask3Controller.text,
+                    false,);
+                }
+                  if (result== null){
                   print('error creating task');
                 } else {
                   print ('task created');

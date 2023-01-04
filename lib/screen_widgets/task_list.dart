@@ -6,7 +6,8 @@ import '../page_widgets/task_tile.dart';
 
 class TaskList extends StatefulWidget {
   String status;
-  TaskList(this.status, {super.key});
+  String uid;
+  TaskList(this.status, this.uid, {super.key});
 
 
   @override
@@ -21,7 +22,7 @@ class _TaskListState extends State<TaskList> {
       return ListView.builder(
         itemCount: filteredTasks.length ?? 0,
         itemBuilder: (context, index) {
-          return TaskTile(filteredTasks[index]);
+          return TaskTile(filteredTasks[index], widget.uid);
       }
       );
     }

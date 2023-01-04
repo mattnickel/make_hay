@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:make_hay/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,14 +14,34 @@ import '../services/database.dart';
 
 
 
-class TaskTile extends StatelessWidget {
+class TaskTile extends StatefulWidget {
   final Task task;
+  final String uid;
+  const TaskTile(this.task, this.uid, {super.key});
 
- const TaskTile(this.task, {super.key});
+  @override
+  State<TaskTile> createState() => _TaskTileState();
+}
+
+class _TaskTileState extends State<TaskTile> {
+  late bool sub1Checked;
+  late bool sub2Checked;
+  late bool sub3Checked;
+
+  @override
+  void initState() {
+    super.initState();
+    sub1Checked = widget.task.subtask1Status ?? false;
+    sub2Checked = widget.task.subtask2Status ?? false;
+    sub3Checked = widget.task.subtask3Status?? false;
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
     String newStatus;
-    switch (task.status) {
+    switch (widget.task.status) {
       case "completed": {
         newStatus ="archived";
       } break;
@@ -32,7 +53,7 @@ class TaskTile extends StatelessWidget {
       } break;
     }
     String quickAction;
-    switch (task.status) {
+    switch (widget.task.status) {
       case "completed": {
         quickAction ="Archive";
       } break;
@@ -43,13 +64,12 @@ class TaskTile extends StatelessWidget {
         quickAction = "Done";
       } break;
     }
-    print (task.taskId);
-    late String date = DateFormat('MM/dd/yy').format(DateTime.parse(task.dueDate!.toDate().toString())).toString();
+    late String date = DateFormat('MM/dd/yy').format(DateTime.parse(widget.task.dueDate!.toDate().toString())).toString();
     return Stack(
         children:[
           Container(
             margin: const EdgeInsets.all(20.0),
-            height:220,
+            height:250,
             width: MediaQuery.of(context).size.width - 40,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -63,7 +83,6 @@ class TaskTile extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       color: Colors.black38,
-
                     ),
                   ),
                 ),
@@ -84,7 +103,7 @@ class TaskTile extends StatelessWidget {
                                   fontSize: 12),
                             ),
                             Text(
-                              task.dueDate == null ? "" : date,
+                              widget.task.dueDate == null ? "" : date,
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
@@ -94,64 +113,116 @@ class TaskTile extends StatelessWidget {
                         ),
                       ),
                     ),
-
-                    // Expanded(
-                    //     child: IconButton(
-                    //       icon: const Icon(Icons.drag_indicator ), onPressed: () {
-                    //       print("move");
-                    //     },
-                    //     )
-                    // ),
-                    // SizedBox(
-                    //   width: 150,
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.only(top: 25),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: const [
-                    //         Text(
-                    //           "Assigned to:",
-                    //           style: TextStyle(
-                    //               color: Colors.black,
-                    //               fontSize: 12),
-                    //         ),
-                    //         Text(
-                    //           "Matt N",
-                    //           style: TextStyle(
-                    //               color: Colors.black,
-                    //               fontWeight: FontWeight.bold,
-                    //               fontSize: 18),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
               SizedBox(
 
-                height: 120,
+                height: 150,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 40.0, top:10),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(task.title ?? "",
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top:10.0, right:40),
-                          child: Text(task.description ?? "",
-                              style: const TextStyle(
+                          padding: const EdgeInsets.only(bottom:8.0),
+                          child: Text(widget.task.title ?? "",
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
                                 color: Colors.black,
-                                fontSize: 14,
-                              )
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
                           ),
+                        ),
+                        Row(
+                          children: [
+                            Visibility(
+                              visible: widget.task?.subtask1Title  != "",
+                              child: SizedBox(
+                                height:30,
+                                child: Checkbox(
+                                    value: sub1Checked,
+                                    shape: const CircleBorder(),
+                                    // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
+                                    onChanged: (value){
+                                      setState((){
+                                        sub1Checked = value!;
+                                        DatabaseService(uid: widget.uid).updateSubTaskStatus( widget.task.taskId, "subtask1", widget.task.subtask1Title, sub1Checked);
+                                        });
+
+                                    }),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:0.0, right:40),
+                              child: Text(widget.task.subtask1Title?.toString() ?? "",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  )
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+
+                          children: [
+                            Visibility(
+                              visible: widget.task.subtask2Title != "",
+                              child: SizedBox(
+                                height:30,
+                                child: Checkbox(
+                                    value: sub2Checked,
+                                    shape: const CircleBorder(),
+                                    // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
+                                    onChanged: (value){
+                                      setState((){
+                                        sub2Checked = value!;
+                                      });
+                                      DatabaseService(uid: widget.uid).updateSubTaskStatus( widget.task.taskId, "subtask2", widget.task.subtask2Title, sub2Checked);
+                                    }),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right:40),
+                              child: Text(widget.task.subtask2Title?.toString() ?? "",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  )
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Visibility(
+                              visible: widget.task.subtask3Title != "",
+                              child: SizedBox(
+                                height:30,
+                                child: Checkbox(
+                                    value: sub3Checked,
+                                    shape: const CircleBorder(),
+                                    // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
+                                    onChanged: (value){
+                                      setState((){
+                                        sub3Checked = value!;
+                                    });
+                                      DatabaseService(uid: widget.uid).updateSubTaskStatus( widget.task.taskId, "subtask3", widget.task.subtask3Title, sub3Checked);
+                                  }
+                              ),
+                            ),
+                          ),
+                            Padding(
+                              padding: const EdgeInsets.only(right:40),
+                              child: Text(widget.task.subtask3Title?.toString() ?? "",
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  )
+                              ),
+                            ),
+                          ],
                         ),
                       ]
                   ),
@@ -184,7 +255,7 @@ class TaskTile extends StatelessWidget {
 
                           ),
                           onPressed: ()async{
-                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:task, action:"Update")));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:widget.task, uid: widget.uid, action:"Update")));
                             print('Pressed');
                           },
 
@@ -216,7 +287,7 @@ class TaskTile extends StatelessWidget {
                         onPressed: ()async{
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           final uid= prefs.getString("uid")!;
-                          dynamic result = DatabaseService(uid: uid).updateTaskStatus(task.taskId, newStatus);
+                          dynamic result = DatabaseService(uid: uid).updateTaskStatus(widget.task.taskId, newStatus);
                           if (result== null){
                             print('error creating task');
                           }

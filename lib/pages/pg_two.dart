@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:make_hay/screens/task_list_screen.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/task_model.dart';
 import '../page_widgets/task_tile.dart';
 import '../services/auth.dart';
 import '../services/database.dart';
 
+class Two extends StatefulWidget {
+  String uid="";
+  @override
+  State<Two> createState() => _TwoState();
+}
 
+class _TwoState extends State<Two> {
 
-class Two extends StatelessWidget {
+  _getId()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    widget.uid= prefs.getString("uid")!;
+  }
 
   final AuthService _auth = AuthService();
   @override
-
+  void initState() {
+    super.initState();
+    _getId().whenComplete(() {
+      setState(() {});
+  });
+        }
+  @override
   Widget build(BuildContext context) {
+
     return StreamProvider<Iterable<Task>>.value(
-        value: DatabaseService(uid: '').tasks,
-        initialData: [],
+        value: DatabaseService(uid:widget.uid).tasks,
+        initialData: const [],
         child:
       DefaultTabController(
           length: 3,
@@ -44,8 +60,6 @@ class Two extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           )
-
-
                       ),
                       Container(
                           alignment: Alignment.centerLeft,
@@ -75,9 +89,9 @@ class Two extends StatelessWidget {
                 Expanded(
                     child: TabBarView(
                       children: [
-                        TaskListScreen("active"),
-                        TaskListScreen("completed"),
-                        TaskListScreen("archived"),
+                        TaskListScreen("active", widget.uid),
+                        TaskListScreen("completed", widget.uid),
+                        TaskListScreen("archived", widget.uid),
                         // TaskList("Completed"),
                         // TaskList("Archived"),
                       ],
@@ -89,5 +103,4 @@ class Two extends StatelessWidget {
       )
     );
   }
-
 }
