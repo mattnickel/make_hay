@@ -273,9 +273,12 @@ class SignupScreenState extends State<SignupScreen> {
             Container(
               alignment: Alignment.center,
               child: FormBuilderTextField(
-
                 controller: emailController,
-                // validator: [FormBuilderValidators.email(),FormBuilderValidators.required()],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.email(errorText: 'Please enter a valid email.'),
+                ]),
                 cursorColor: Colors.black54,
                 keyboardType: TextInputType.emailAddress,
                 style: const TextStyle(color: Colors.black54),
@@ -286,46 +289,60 @@ class SignupScreenState extends State<SignupScreen> {
                   fillColor: Colors.white,
                   focusColor: Colors.white,
                   hintText: "Email",
-                  border: InputBorder.none,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Color(00000000)),
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Color(0xff00eebc)),
+                    borderSide: BorderSide(color: Colors.black),
+
                   ),
                   hintStyle: TextStyle(color: Colors.black54),
-                ), name: '',
+                ), name: 'Email',
               ),
             ),
             const SizedBox(height: 20.0),
-            Container(
-              child: FormBuilderTextField(
-                controller: passwordController,
-                // validator:[FormBuilderValidators.pattern(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"), FormBuilderValidators.required(), FormBuilderValidators.min(6)],
-                cursorColor: Colors.black54,
-                obscureText: true,
-                style: const TextStyle(color: Colors.black54),
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-                  prefixIcon: Icon(Icons.lock, color: Colors.black54),
-                  filled:true,
-                  fillColor: Colors.white,
-                  focusColor: Colors.white,
-                  hintText: "Password",
-                  border: InputBorder.none,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Color(00000000)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    borderSide: BorderSide(color: Color(0xff00eebc)),
-                  ),
-                  hintStyle: TextStyle(color: Colors.black54),
-                ), name: '',
-              ),
+            FormBuilderTextField(
+              controller: passwordController,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              validator:FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.match(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"),
+                  FormBuilderValidators.min(6)]),
+              cursorColor: Colors.black54,
+              obscureText: true,
+              style: const TextStyle(color: Colors.black54),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+                prefixIcon: Icon(Icons.lock, color: Colors.black54),
+                filled:true,
+                fillColor: Colors.white,
+                focusColor: Colors.white,
+                hintText: "Password",
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: Colors.red),
+                ),
+                border: InputBorder.none,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: Colors.white),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  borderSide: BorderSide(color: Colors.black),
+                ),
+                hintStyle: TextStyle(color: Colors.black54),
+              ), name: '',
             ),
 
             const SizedBox(height: 10.0),
@@ -341,6 +358,7 @@ class SignupScreenState extends State<SignupScreen> {
                 const Spacer(),
                 Switch(
                     inactiveTrackColor: Colors.white12,
+                    activeColor:const Color(0xFFC23B00),
                     value: _showGroup,
                     onChanged: (value) async {
                       setState(() {
@@ -353,31 +371,29 @@ class SignupScreenState extends State<SignupScreen> {
             const SizedBox(height: 0.0),
             Visibility(
               visible: _showGroup,
-              child: Container(
-                child: FormBuilderTextField(
-                  controller: joincodeController,
-                  // validator: FormBuilderValidator.min(6)],
-                  cursorColor: Colors.black54,
-                  style: const TextStyle(color: Colors.black54),
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
-                    prefixIcon: Icon(Icons.group_rounded, color: Colors.black54),
-                    filled:true,
-                    fillColor: Colors.white,
-                    focusColor: Colors.white,
-                    hintText: "Group Joincode",
-                    border: InputBorder.none,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(00000000)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                      borderSide: BorderSide(color: Color(0xff00eebc)),
-                    ),
-                    hintStyle: TextStyle(color: Colors.black54),
-                  ), name: '',
-                ),
+              child: FormBuilderTextField(
+                controller: joincodeController,
+                // validator: FormBuilderValidator.min(6)],
+                cursorColor: Colors.black54,
+                style: const TextStyle(color: Colors.black54),
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 10.0),
+                  prefixIcon: Icon(Icons.group_rounded, color: Colors.black54),
+                  filled:true,
+                  fillColor: Colors.white,
+                  focusColor: Colors.white,
+                  hintText: "Group Joincode",
+                  border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: Color(0x00000000)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    borderSide: BorderSide(color: Color(0xFFC23B00)),
+                  ),
+                  hintStyle: TextStyle(color: Colors.black54),
+                ), name: '',
               ),
             ),
             const SizedBox(height: 10.0),

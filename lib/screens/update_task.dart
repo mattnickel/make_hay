@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:make_hay/services/database.dart';
@@ -22,6 +24,7 @@ class UpdateTask extends StatefulWidget {
 
 }
 class UpdateTaskState extends State<UpdateTask> {
+  final GlobalKey<FormBuilderState> _formCKey = GlobalKey<FormBuilderState>();
   final titleController = TextEditingController();
   final timeController = TextEditingController();
   final subtask1Controller = TextEditingController();
@@ -49,7 +52,7 @@ class UpdateTaskState extends State<UpdateTask> {
     subtask3Controller.text =task?.subtask3Title ?? "";
     timeController.text = widget.taskObject?.dueDate != null ? DateFormat('MM/dd/yy').format(DateTime.parse(task!.dueDate!.toDate().toString())).toString() : "";
     dateOn = widget.taskObject?.dueDate != null;
-    statusOn = widget.taskObject?.status != "";
+    statusOn = widget.taskObject?.status != null;
     status = widget.taskObject?.status ?? "active";
     titleAction = widget.action;
 
@@ -79,7 +82,9 @@ class UpdateTaskState extends State<UpdateTask> {
             padding:const EdgeInsets.only(top:80),
             height:MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            child: Column(
+            child: FormBuilder(
+              key: _formCKey,
+              child:Column(
               children: [
 
               Padding(
@@ -98,15 +103,13 @@ class UpdateTaskState extends State<UpdateTask> {
             ),
               TextFormField(
             controller: titleController,
-            validator: (value) {
-              if (value == null) {
-                return 'Task title cannot be empty';
-              }
-              return null;
-            },
+            validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(),
+                FormBuilderValidators.maxLength(70),
+              ]),
             cursorColor: Colors.black54,
             style: const TextStyle(color: Colors.black),
-
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                   vertical: 16.0, horizontal: 10.0),
@@ -121,13 +124,20 @@ class UpdateTaskState extends State<UpdateTask> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                borderSide: BorderSide(color: Color(0xff00eebc)),
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                borderSide: BorderSide(color: Colors.red),
               ),
               hintStyle: TextStyle(color: Colors.black54),
             ),
               ),
               Padding(padding: const EdgeInsets.only(top:20, left:40),
             child: TextFormField(
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.maxLength(40),
+              ]),
               controller: subtask1Controller,
               cursorColor: Colors.black54,
               style: const TextStyle(color: Colors.black),
@@ -153,6 +163,9 @@ class UpdateTaskState extends State<UpdateTask> {
               ),
                 Padding(padding: const EdgeInsets.only(top:20, left:40),
                   child: TextFormField(
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.maxLength(40),
+                    ]),
                     controller: subtask2Controller,
                     cursorColor: Colors.black54,
                     style: const TextStyle(color: Colors.black),
@@ -179,12 +192,9 @@ class UpdateTaskState extends State<UpdateTask> {
                 Padding(padding: const EdgeInsets.only(top:20, left:40),
                   child: TextFormField(
                     controller: subtask3Controller,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Task title cannot be empty';
-                      }
-                      return null;
-                    },
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.maxLength(40),
+                    ]),
                     cursorColor: Colors.black54,
                     style: const TextStyle(color: Colors.black),
                     decoration: const InputDecoration(
@@ -209,7 +219,7 @@ class UpdateTaskState extends State<UpdateTask> {
                 ),
               Padding(padding: const EdgeInsets.only(top:20),
             child: Visibility(
-              visible: dateOn,
+              visible: statusOn,
               child: DropdownButtonFormField(
                 // itemHeight:50,
 
@@ -372,7 +382,7 @@ class UpdateTaskState extends State<UpdateTask> {
             ]
             ),
           )
-
+          )
         ],
       ),
     );

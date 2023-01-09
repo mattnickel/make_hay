@@ -39,7 +39,11 @@ class _TaskTileState extends State<TaskTile> {
 
   @override
   Widget build(BuildContext context) {
-
+    bool? late = false;
+    if (widget.task?.dueDate !=null) {
+      late = widget.task.dueDate?.toDate().isBefore(DateTime.now().subtract(Duration(days: 1)));
+      print(late);
+    }
     String newStatus;
     switch (widget.task.status) {
       case "completed": {
@@ -65,6 +69,7 @@ class _TaskTileState extends State<TaskTile> {
       } break;
     }
     late String date = DateFormat('MM/dd/yy').format(DateTime.parse(widget.task.dueDate!.toDate().toString())).toString();
+
     return Stack(
         children:[
           Container(
@@ -102,13 +107,23 @@ class _TaskTileState extends State<TaskTile> {
                                   color: Colors.black,
                                   fontSize: 12),
                             ),
-                            Text(
-                              widget.task.dueDate == null ? "" : date,
-                              style: const TextStyle(
+                            if (late!) ...[
+                              Text(
+                                widget.task.dueDate == null ? "" : date,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                              ),
+                            ] else ...[
+                              Text(
+                                widget.task.dueDate == null ? "" : date,
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18),
-                            ),
+                              )
+                            ]
                           ],
                         ),
                       ),
@@ -117,10 +132,9 @@ class _TaskTileState extends State<TaskTile> {
                 ),
               ),
               SizedBox(
-
                 height: 150,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 40.0, top:10),
+                  padding: const EdgeInsets.only(left: 40.0, top:10, right:40.0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -137,10 +151,11 @@ class _TaskTileState extends State<TaskTile> {
                         Row(
                           children: [
                             Visibility(
-                              visible: widget.task?.subtask1Title  != "",
+                              visible:  widget.task?.subtask1Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
+                                    activeColor:const Color(0xFFC23B00),
                                     value: sub1Checked,
                                     shape: const CircleBorder(),
                                     // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
@@ -168,10 +183,11 @@ class _TaskTileState extends State<TaskTile> {
 
                           children: [
                             Visibility(
-                              visible: widget.task.subtask2Title != "",
+                              visible: widget.task?.subtask2Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
+                                    activeColor:const Color(0xFFC23B00),
                                     value: sub2Checked,
                                     shape: const CircleBorder(),
                                     // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
@@ -197,10 +213,11 @@ class _TaskTileState extends State<TaskTile> {
                         Row(
                           children: [
                             Visibility(
-                              visible: widget.task.subtask3Title != "",
+                              visible: widget.task?.subtask3Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
+                                    activeColor:const Color(0xFFC23B00),
                                     value: sub3Checked,
                                     shape: const CircleBorder(),
                                     // fillColor:MaterialStateProperty.resolveWith(Color(0xFFC23B00)),
@@ -256,7 +273,6 @@ class _TaskTileState extends State<TaskTile> {
                           ),
                           onPressed: ()async{
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:widget.task, uid: widget.uid, action:"Update")));
-                            print('Pressed');
                           },
 
                         ),

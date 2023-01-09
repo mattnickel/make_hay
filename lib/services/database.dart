@@ -82,7 +82,17 @@ class DatabaseService{
   }
   Stream<List<Task>> get tasks{
     print(uid);
-    return tasksCollection.where("user", isEqualTo: uid).snapshots()
+    return tasksCollection.where("user", isEqualTo: uid).orderBy('due').snapshots()
+        .map(_taskListFromSnapshot);
+  }
+  Stream<List<Task>> get todayTasks{
+    DateTime now = DateTime.now();
+    DateTime start = DateTime(now.year, now.month, now.day, 0, 0);
+    DateTime end = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    return tasksCollection.where("user", isEqualTo: uid)
+        .where('due', isLessThanOrEqualTo: end)
+        .orderBy('due').snapshots()
         .map(_taskListFromSnapshot);
   }
 }

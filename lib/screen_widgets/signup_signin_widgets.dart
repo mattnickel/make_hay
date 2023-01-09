@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import '../popups/terms_popup.dart';
 import '../screens/login_screen.dart';
 import '../screens/reset_password.dart';
@@ -61,12 +62,11 @@ Container formSection(emailController, passwordController) {
           alignment: Alignment.center,
           child: TextFormField(
             controller: emailController,
-            validator: (value) {
-              if (value == null) {
-                return 'Email cannot be empty';
-              }
-              return null;
-            },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(),
+              FormBuilderValidators.email(errorText: 'Please enter a valid email.'),
+            ]),
             cursorColor: Colors.black54,
             keyboardType: TextInputType.emailAddress,
             style: const TextStyle(color: Colors.black54),
@@ -79,13 +79,18 @@ Container formSection(emailController, passwordController) {
               focusColor: Colors.white,
               hintText: "Email",
               border: InputBorder.none,
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                borderSide: BorderSide(color: Colors.red),
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: Color(00000000)),
+                borderSide: BorderSide(color: Colors.white),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                borderSide: BorderSide(color: Color(0xff00eebc)),
+                borderSide: BorderSide(color: Colors.black),
+
               ),
               hintStyle: TextStyle(color: Colors.black54),
             ),
@@ -94,12 +99,10 @@ Container formSection(emailController, passwordController) {
         const SizedBox(height: 20.0),
         TextFormField(
           controller: passwordController,
-          validator: (value) {
-            if (value != null  && value.length < 6) {
-              return 'Password must have 6+ characters';
-            }
-            return null;
-          },
+          validator:FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+            FormBuilderValidators.match(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#%\$&*~]).{8,}$', errorText: "Invalid password: A capital letter, number, and symbol required"),
+            FormBuilderValidators.min(6)]),
           cursorColor: Colors.black54,
           obscureText: true,
           style: const TextStyle(color: Colors.black54),
@@ -110,15 +113,20 @@ Container formSection(emailController, passwordController) {
             filled: true,
             fillColor: Colors.white,
             focusColor: Colors.white,
+
             hintText: "Password",
             border: InputBorder.none,
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              borderSide: BorderSide(color: Colors.red),
+            ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(25.0)),
-              borderSide: BorderSide(color: Color(00000000)),
+              borderSide: BorderSide(color: Colors.white),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(25.0)),
-              borderSide: BorderSide(color: Color(0xff00eebc)),
+              borderSide: BorderSide(color: Colors.black),
             ),
             hintStyle: TextStyle(color: Colors.black54),
           ),
