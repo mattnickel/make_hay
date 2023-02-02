@@ -4,17 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import '../popups/beta_popup.dart';
 import '../screen_widgets/signup_signin_widgets.dart';
-
 import '../popups/terms_popup.dart';
-import '../services/api_login.dart';
 import '../services/auth.dart';
-import 'login_screen.dart';
+
 
 
 class SignupScreen extends StatefulWidget {
   final Function toggleView;
-  SignupScreen({required this.toggleView});
+  const SignupScreen({super.key, required this.toggleView});
   @override
   SignupScreenState createState() => SignupScreenState();
 }
@@ -68,7 +67,7 @@ class SignupScreenState extends State<SignupScreen> {
                 style: const TextStyle(
                   decoration: TextDecoration.underline,
                 ),
-                recognizer: new TapGestureRecognizer()
+                recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     widget.toggleView();
                     // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen("")), (Route<dynamic> route) => false);

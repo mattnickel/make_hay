@@ -2,10 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import '../popups/beta_popup.dart';
 import '../popups/terms_popup.dart';
-import '../screens/login_screen.dart';
 import '../screens/reset_password.dart';
-import '../screens/signup_screen.dart';
 
 Container headerSection(context, headerText) {
   return Container(
@@ -13,45 +12,11 @@ Container headerSection(context, headerText) {
     child: Column(
       children: [
         Image.asset("assets/images/make_hay_logo.png", width: 170),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 3.0),
-        //   child: Text(headerText,
-        //       style: TextStyle(
-        //           color: Colors.white70,
-        //           fontSize: 30.0,
-        //           fontWeight: FontWeight.bold
-        //       )
-        //   ),
-        // ),
 
       ],
     ),
   );
 }
-// RichText returningUserSection(context){
-//   return RichText(
-//       textAlign: TextAlign.center,
-//       text: TextSpan(
-//           text:'Already Signed Up?  ',
-//           style: const TextStyle(
-//               color: Colors.white70
-//           ),
-//           children: <TextSpan>[
-//             TextSpan(
-//               text: "Log in",
-//               style: const TextStyle(
-//                 decoration: TextDecoration.underline,
-//               ),
-//               recognizer: new TapGestureRecognizer()
-//                 ..onTap = () {
-//                   widget.toggleView()
-//                   // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => const LoginScreen("")), (Route<dynamic> route) => false);
-//                 },
-//             )
-//           ]
-//       )
-//   );
-// }
 
 Container formSection(emailController, passwordController) {
   return Container(
@@ -77,6 +42,7 @@ Container formSection(emailController, passwordController) {
               filled: true,
               fillColor: Colors.white,
               focusColor: Colors.white,
+              errorStyle: TextStyle(color: Colors.white),
               hintText: "Email",
               border: InputBorder.none,
               errorBorder: OutlineInputBorder(
@@ -90,7 +56,6 @@ Container formSection(emailController, passwordController) {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(25.0)),
                 borderSide: BorderSide(color: Colors.black),
-
               ),
               hintStyle: TextStyle(color: Colors.black54),
             ),
@@ -113,7 +78,7 @@ Container formSection(emailController, passwordController) {
             filled: true,
             fillColor: Colors.white,
             focusColor: Colors.white,
-
+            errorStyle: TextStyle(color: Colors.white),
             hintText: "Password",
             border: InputBorder.none,
             errorBorder: OutlineInputBorder(
@@ -131,7 +96,6 @@ Container formSection(emailController, passwordController) {
             hintStyle: TextStyle(color: Colors.black54),
           ),
         ),
-
       ],
     ),
   );
@@ -148,7 +112,7 @@ Container errorSection(error){
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline), const SizedBox(width: 5.0),
+              const Icon(Icons.error_outline, color:Colors.white), const SizedBox(width: 5.0),
               Text(
                   error
               ),
@@ -180,7 +144,7 @@ Positioned termsSection(termsInfo, privacyInfo, context){
                     children: <TextSpan>[
                       TextSpan(
                           text: "Terms of Use",
-                          recognizer: new TapGestureRecognizer()
+                          recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               termsInfo = await rootBundle.loadString('assets/text/terms.txt');
                               await showDialog(
@@ -199,7 +163,7 @@ Positioned termsSection(termsInfo, privacyInfo, context){
                       ),
                       TextSpan(
                           text: "Privacy Policy",
-                          recognizer: new TapGestureRecognizer()
+                          recognizer: TapGestureRecognizer()
                             ..onTap = () async{
                               privacyInfo = await rootBundle.loadString('assets/text/privacy.txt');
                               print("here");
@@ -209,7 +173,6 @@ Positioned termsSection(termsInfo, privacyInfo, context){
                                     return termsPopup("Privacy Policy", privacyInfo, context);
                                   }
                               );
-
                             },
                           style: const TextStyle(
                             decoration: TextDecoration.underline,)
@@ -225,29 +188,6 @@ Positioned termsSection(termsInfo, privacyInfo, context){
     ),
   );
 }
-// RichText newUserSection(context){
-//   return RichText(
-//       textAlign: TextAlign.center,
-//       text: TextSpan(
-//           text:'New user?  ',
-//           style: const TextStyle(
-//               color: Colors.white70
-//           ),
-//           children: <TextSpan>[
-//             TextSpan(
-//               text: "Sign up",
-//               style: const TextStyle(
-//                 decoration: TextDecoration.underline,
-//               ),
-//               recognizer: new TapGestureRecognizer()
-//                 ..onTap = () {
-//                   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => SignupScreen()), (Route<dynamic> route) => false);
-//                 },
-//             )
-//           ]
-//       )
-//   );
-// }
 Align forgotPasswordSection(context){
   return Align(
     alignment: Alignment.center,

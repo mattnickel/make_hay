@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:make_hay/services/database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../popups/beta_popup.dart';
 
 
+class Three extends StatefulWidget {
 
-class Three extends StatelessWidget {
   const Three({super.key});
 
+  @override
+  State<Three> createState() => _ThreeState();
+}
+
+class _ThreeState extends State<Three> {
+  late String uid="";
+
+  _getId()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    uid= prefs.getString("uid")!;
+  }
+  @override
+  void initState() {
+    super.initState();
+    _getId();
+  }
   @override
 
   Widget build(BuildContext context){
@@ -69,7 +88,14 @@ class Three extends StatelessWidget {
               padding: const EdgeInsets.only(top:40.0),
               child: ElevatedButton(
               onPressed: () async {
-                    Navigator.of(context).pop();
+                    // Navigator.of(context).pop();
+                DatabaseService(uid:uid).createInterested();
+                await showDialog(
+                    context:context,
+                    builder:(BuildContext context){
+                      return betaPopup(context);
+                    }
+                );
                   },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFC23B00),
@@ -85,6 +111,4 @@ class Three extends StatelessWidget {
           ],
         ));
   }
-
-
 }

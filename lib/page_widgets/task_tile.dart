@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:make_hay/services/database.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:day/day.dart';
 import '../models/task_model.dart';
 import '../screens/update_task.dart';
-import '../services/database.dart';
-
-
-
-
 
 class TaskTile extends StatefulWidget {
   final Task task;
@@ -34,15 +25,13 @@ class _TaskTileState extends State<TaskTile> {
     sub1Checked = widget.task.subtask1Status ?? false;
     sub2Checked = widget.task.subtask2Status ?? false;
     sub3Checked = widget.task.subtask3Status?? false;
-
   }
 
   @override
   Widget build(BuildContext context) {
     bool? late = false;
-    if (widget.task?.dueDate !=null) {
-      late = widget.task.dueDate?.toDate().isBefore(DateTime.now().subtract(Duration(days: 1)));
-      print(late);
+    if (widget.task.dueDate !=null) {
+      late = widget.task.dueDate?.toDate().isBefore(DateTime.now().subtract(const Duration(days: 1)));
     }
     String newStatus;
     switch (widget.task.status) {
@@ -140,7 +129,7 @@ class _TaskTileState extends State<TaskTile> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom:8.0),
-                          child: Text(widget.task.title ?? "",
+                          child: Text(widget.task.title,
                             textAlign: TextAlign.left,
                             style: const TextStyle(
                                 color: Colors.black,
@@ -151,7 +140,7 @@ class _TaskTileState extends State<TaskTile> {
                         Row(
                           children: [
                             Visibility(
-                              visible:  widget.task?.subtask1Title != "",
+                              visible:  widget.task.subtask1Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
@@ -164,7 +153,6 @@ class _TaskTileState extends State<TaskTile> {
                                         sub1Checked = value!;
                                         DatabaseService(uid: widget.uid).updateSubTaskStatus( widget.task.taskId, "subtask1", widget.task.subtask1Title, sub1Checked);
                                         });
-
                                     }),
                               ),
                             ),
@@ -180,10 +168,9 @@ class _TaskTileState extends State<TaskTile> {
                           ],
                         ),
                         Row(
-
                           children: [
                             Visibility(
-                              visible: widget.task?.subtask2Title != "",
+                              visible: widget.task.subtask2Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
@@ -213,7 +200,7 @@ class _TaskTileState extends State<TaskTile> {
                         Row(
                           children: [
                             Visibility(
-                              visible: widget.task?.subtask3Title != "",
+                              visible: widget.task.subtask3Title != "",
                               child: SizedBox(
                                 height:30,
                                 child: Checkbox(
@@ -244,8 +231,6 @@ class _TaskTileState extends State<TaskTile> {
                       ]
                   ),
                 ),
-
-
               ),
               Row(
                 children: [
@@ -269,15 +254,11 @@ class _TaskTileState extends State<TaskTile> {
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 18),
-
                           ),
                           onPressed: ()async{
                             Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => UpdateTask(taskObject:widget.task, uid: widget.uid, action:"Update")));
                           },
-
                         ),
-
-
                       ),
                     ),
 
@@ -308,7 +289,6 @@ class _TaskTileState extends State<TaskTile> {
                             print('error creating task');
                           }
                         },
-
                       ),
                     ),
                   ),
@@ -316,8 +296,6 @@ class _TaskTileState extends State<TaskTile> {
               ),
             ],
           ),
-
-
         ]);
   }
 }

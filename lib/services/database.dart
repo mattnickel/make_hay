@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/task_model.dart';
 
 class DatabaseService{
@@ -10,6 +7,7 @@ class DatabaseService{
 
   final CollectionReference userDataCollection = FirebaseFirestore.instance.collection('user_data');
   final CollectionReference tasksCollection = FirebaseFirestore.instance.collection('tasks');
+  final CollectionReference interestedCollection = FirebaseFirestore.instance.collection('interested');
 
 
   Future<void> updateSubTaskStatus (taskId, subtaskNumber,title, status)async{
@@ -22,6 +20,13 @@ class DatabaseService{
       'name': name,
     });
   }
+  Future<void> createInterested() async{
+    return await interestedCollection.doc().set({
+      'interested': true,
+      'user': uid,
+    });
+  }
+
   Future<void> updateTasks(taskId, taskName,  taskStatus, date, subtask1Title, subtask1Status,subtask2Title, subtask2Status,subtask3Title, subtask3Status) async {
     if(taskId ==""){
       taskId = null;
@@ -43,11 +48,8 @@ class DatabaseService{
     });
   }
   List<Task> _taskListFromSnapshot(QuerySnapshot snapshot){
-    // final query = tasksCollection.where("status", isEqualTo: "active").where("user", isEqualTo: uid);
     return snapshot.docs.map((doc){
-      print(doc.data().toString());
         return Task(
-
             taskId: doc.id,
             title: doc.data().toString().contains('task')
                 ? doc.get('task')
@@ -81,7 +83,6 @@ class DatabaseService{
     }).toList();
   }
   Stream<List<Task>> get tasks{
-    print(uid);
     return tasksCollection.where("user", isEqualTo: uid).orderBy('due').snapshots()
         .map(_taskListFromSnapshot);
   }

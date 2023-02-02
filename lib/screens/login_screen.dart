@@ -1,23 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:make_hay/screens/signup_screen.dart';
 import 'package:make_hay/services/auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../framework.dart';
 import '../screen_widgets/signup_signin_widgets.dart';
-import '../services/api_login.dart';
-
-
-
 
 class LoginScreen extends StatefulWidget {
   final Function toggleView;
-  LoginScreen({required this.toggleView});
-  @override
 
+  const LoginScreen({super.key, required this.toggleView});
+  @override
   LoginScreenState createState() => LoginScreenState();
 }
 
@@ -32,13 +24,12 @@ class LoginScreenState extends State<LoginScreen> {
   late String privacyInfo;
   late String termsInfo;
   String error='';
+
   Future<String> loadAsset(String s) async {
     return await rootBundle.loadString(s);
   }
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -60,7 +51,7 @@ class LoginScreenState extends State<LoginScreen> {
                 style: const TextStyle(
                   decoration: TextDecoration.underline,
                 ),
-                recognizer: new TapGestureRecognizer()
+                recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     widget.toggleView();
                   },
@@ -79,8 +70,8 @@ class LoginScreenState extends State<LoginScreen> {
   _setUserPrefs(id) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     email = emailController.text;
-    prefs.setString("email", email)!;
-    prefs.setString("uid", id)!;
+    prefs.setString("email", email);
+    prefs.setString("uid", id);
   }
   _enableSignin() {
     setState(() {
@@ -99,12 +90,16 @@ class LoginScreenState extends State<LoginScreen> {
             _isLoading = true;
           });
           dynamic result = await _auth.signInWithEmailAndPassword(emailController.text, passwordController.text);
-          _setUserPrefs(result.uid);
+
           if (result== null){
             print('error signing in');
+            error = "Oops... incorrect email or password";
+            setState(() {
+              _isLoading = false;
+            });
+
           } else {
-            print ('signed in');
-            print(result.uid);
+            _setUserPrefs(result.uid);
             // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => Framework()), (Route<dynamic> route) => false);
           }
           // ]
@@ -132,7 +127,6 @@ class LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           Container(
-
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
@@ -166,37 +160,18 @@ class LoginScreenState extends State<LoginScreen> {
                 errorSection(error),
                 buttonSection(),
                 forgotPasswordSection(context),
-
               ],
             ),
-
           ),
           // termsSection(privacyInfo, termsInfo, context),
         ],
       ),
-
     );
   }
-
-
-
-
-
-
-
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
-
-
-
 }
-
-
-
-
