@@ -1,4 +1,4 @@
-package com.example.make_hay
+package com.nickeldev.make_hay
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nickeldev.makehay">
+    package="com.nickeldev.make_hay">
    <application
         android:label="make_hay"
         android:name="${applicationName}"
